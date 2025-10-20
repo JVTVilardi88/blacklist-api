@@ -11,19 +11,20 @@ from config import DATABASE_URL, BEARER_TOKEN
 from database import db, init_db
 from models import add_to_blacklist, check_blacklist, Blacklist
 
-app = Flask(__name__)
+# AWS Elastic Beanstalk espera una variable llamada "application"
+application = Flask(__name__)
 
 # Configuración desde config.py
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = BEARER_TOKEN
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+application.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+application.config['JWT_SECRET_KEY'] = BEARER_TOKEN
+application.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 # Inicializar extensiones
-init_db(app)  # Usar la función de database.py
-ma = Marshmallow(app)
-jwt = JWTManager(app)
-api = Api(app)
+init_db(application)
+ma = Marshmallow(application)
+jwt = JWTManager(application)
+api = Api(application)
 
 # Esquema Marshmallow
 class BlacklistSchema(ma.SQLAlchemySchema):
@@ -51,18 +52,16 @@ class LoginResource(Resource):
         if not username or not password:
             return {"error": "Se requieren username y password"}, 400
         
-        # VALIDACIÓN DE USUARIOS - MODIFICA ESTA PARTE SEGÚN TUS NECESIDADES
         users = {
             "admin": "admin123",
             "usuario1": "password1", 
             "app_user": "app123456"
         }
         
-        # Verificar credenciales
         if username in users and users[username] == password:
             access_token = create_access_token(
                 identity=username,
-                additional_claims={"role": "admin"}  # Puedes agregar claims adicionales
+                additional_claims={"role": "admin"}
             )
             return {
                 "access_token": access_token,
@@ -106,7 +105,6 @@ class BlacklistResource(Resource):
             ip_address = ip_address.split(',')[0].strip()
         
         try:
-            # Usar la función del modelo
             add_to_blacklist(
                 email=email, 
                 app_uuid=app_uuid, 
@@ -134,7 +132,6 @@ class BlacklistEmailResource(Resource):
         if not EMAIL_REGEX.match(email):
             return {"error": "Formato de email inválido"}, 400
         
-        # Usar la función del modelo
         record = check_blacklist(email)
         if record:
             return {
@@ -156,5 +153,8 @@ api.add_resource(LoginResource, '/auth/login')
 api.add_resource(BlacklistResource, '/blacklists')
 api.add_resource(BlacklistEmailResource, '/blacklists/<string:email>')
 
+# Flask debe escuchar en el puerto que AWS define en la variable PORT
 if __name__ == '__main__':
-    app.run(debug=True, port=5600)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    application.run(host='0.0.0.0', port=port, debug=False)
