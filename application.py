@@ -154,7 +154,7 @@ api.add_resource(BlacklistResource, '/blacklists')
 api.add_resource(BlacklistEmailResource, '/blacklists/<string:email>')
 
 # Flask debe escuchar en el puerto que AWS define en la variable PORT
-if __name__ == '__main__':
+if __name__ == "__main__":
     import os
-    port = int(os.environ.get('PORT', 5000))
-    application.run(host='0.0.0.0', port=port, debug=False)
+    port = int(os.environ.get("PORT", 8080))  # usa 8080 por defecto
+    application.run(host="0.0.0.0", port=port)
