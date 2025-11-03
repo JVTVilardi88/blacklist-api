@@ -5,14 +5,21 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from datetime import timedelta
 import uuid
 import re
+<<<<<<< HEAD
 import os
+=======
+>>>>>>> origin/main
 
 # Importar configuraciones y módulos
 from config import DATABASE_URL, BEARER_TOKEN
 from database import db, init_db
 from models import add_to_blacklist, check_blacklist, Blacklist
 
+<<<<<<< HEAD
 # Crear la aplicación Flask con el nombre 'application' para Elastic Beanstalk
+=======
+# AWS Elastic Beanstalk espera una variable llamada "application"
+>>>>>>> origin/main
 application = Flask(__name__)
 
 # Configuración desde config.py
@@ -22,7 +29,11 @@ application.config['JWT_SECRET_KEY'] = BEARER_TOKEN
 application.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 # Inicializar extensiones
+<<<<<<< HEAD
 init_db(application)  # Usar la función de database.py
+=======
+init_db(application)
+>>>>>>> origin/main
 ma = Marshmallow(application)
 jwt = JWTManager(application)
 api = Api(application)
@@ -41,10 +52,13 @@ blacklist_schema = BlacklistSchema()
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
 # Recursos RESTful
+<<<<<<< HEAD
 class HealthResource(Resource):
     def get(self):
         return {"status": True}, 200
 
+=======
+>>>>>>> origin/main
 class LoginResource(Resource):
     def post(self):
         data = request.get_json()
@@ -57,18 +71,28 @@ class LoginResource(Resource):
         if not username or not password:
             return {"error": "Se requieren username y password"}, 400
         
+<<<<<<< HEAD
         # VALIDACIÓN DE USUARIOS - MODIFICA ESTA PARTE SEGÚN TUS NECESIDADES
+=======
+>>>>>>> origin/main
         users = {
             "admin": "admin123",
             "usuario1": "password1", 
             "app_user": "app123456"
         }
         
+<<<<<<< HEAD
         # Verificar credenciales
         if username in users and users[username] == password:
             access_token = create_access_token(
                 identity=username,
                 additional_claims={"role": "admin"}  # Puedes agregar claims adicionales
+=======
+        if username in users and users[username] == password:
+            access_token = create_access_token(
+                identity=username,
+                additional_claims={"role": "admin"}
+>>>>>>> origin/main
             )
             return {
                 "access_token": access_token,
@@ -112,7 +136,10 @@ class BlacklistResource(Resource):
             ip_address = ip_address.split(',')[0].strip()
         
         try:
+<<<<<<< HEAD
             # Usar la función del modelo
+=======
+>>>>>>> origin/main
             add_to_blacklist(
                 email=email, 
                 app_uuid=app_uuid, 
@@ -140,7 +167,10 @@ class BlacklistEmailResource(Resource):
         if not EMAIL_REGEX.match(email):
             return {"error": "Formato de email inválido"}, 400
         
+<<<<<<< HEAD
         # Usar la función del modelo
+=======
+>>>>>>> origin/main
         record = check_blacklist(email)
         if record:
             return {
@@ -158,12 +188,23 @@ class BlacklistEmailResource(Resource):
             }, 200
 
 # Registrar recursos
+<<<<<<< HEAD
 api.add_resource(HealthResource, '/')
+=======
+>>>>>>> origin/main
 api.add_resource(LoginResource, '/auth/login')
 api.add_resource(BlacklistResource, '/blacklists')
 api.add_resource(BlacklistEmailResource, '/blacklists/<string:email>')
 
+<<<<<<< HEAD
 if __name__ == '__main__':
     # Usar el puerto de la variable de entorno o 8000 por defecto
     port = int(os.environ.get('PORT', 8000))
     application.run(host='0.0.0.0', port=port, debug=False)
+=======
+# Flask debe escuchar en el puerto que AWS define en la variable PORT
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8080))  # usa 8080 por defecto
+    application.run(host="0.0.0.0", port=port)
+>>>>>>> origin/main

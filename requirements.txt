@@ -5,7 +5,13 @@ Flask-Marshmallow==1.2.1
 Flask-JWT-Extended==4.5.3
 marshmallow==3.20.1
 marshmallow-sqlalchemy==0.29.0
+<<<<<<< HEAD
 psycopg2-binary>=2.9.10
 python-dotenv==1.0.0
 PyJWT==2.8.0
 gunicorn==21.2.0
+=======
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+PyJWT==2.8.0
+>>>>>>> origin/main
