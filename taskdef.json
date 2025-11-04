@@ -1,0 +1,24 @@
+{
+  "executionRoleArn": "arn:aws:iam::621703783110:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "api-container",
+      "image": "<IMAGE1_NAME>",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 5000,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "512",
+  "memory": "1024",
+  "family": "blacklist-api-task"
+}
