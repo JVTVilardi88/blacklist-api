@@ -12,10 +12,13 @@ DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "blacklist_db")
 
 # URL de conexión SQLAlchemy
+<<<<<<< HEAD
 # Para pruebas con SQLite (comentar para usar PostgreSQL)
 #DATABASE_URL = "sqlite:///emails.db"
 
 # Para PostgreSQL (descomentar cuando tengas PostgreSQL configurado)
+=======
+>>>>>>> origin/main
 DATABASE_URL = (
     f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@"
     f"{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
