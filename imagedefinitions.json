@@ -1,0 +1,6 @@
+[
+  {
+    "name": "api-container",
+    "imageUri": "621703783110.dkr.ecr.us-east-2.amazonaws.com/api_blacklist:latest"
+  }
+]
